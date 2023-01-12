@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Element from './Element.svelte';
-	import type { okform } from '..';
-	export let okform: okform;
+	import type { OKForm } from '../index.js';
+	export let okform: OKForm;
 </script>
 
 <Element element={okform.form()} />

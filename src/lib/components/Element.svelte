@@ -8,16 +8,16 @@
 		clearTimeouts,
 		registerIntervals,
 		clearIntervals
-	} from '../housekeeping/functions';
+	} from '../housekeeping/functions.js';
 	import {
 		mountEvent,
 		destroyEvent,
 		beforeUpdateEvent,
 		afterUpdateEvent
-	} from '../housekeeping/events';
-	import type { T_Element, Element, FragmentElement } from '../index';
+	} from '../housekeeping/events.js';
+	import type { ElementType, Element, FragmentElement } from '../index.js';
 	import Elements from './Elements.svelte';
-	export let element: T_Element;
+	export let element: ElementType;
 	let _element = <Element>element;
 	let _fragment = <FragmentElement>element;
 	let DOMelement: any;

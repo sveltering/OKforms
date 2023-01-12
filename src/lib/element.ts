@@ -116,6 +116,11 @@ class Element extends _Element {
 		this._events[event].push({ callback, options });
 		return this;
 	}
+
+	input(name: string, type: string = 'text') {
+		let input = <Element>this.append('input');
+		input.attr('type', type);
+	}
 }
 
 export default Element;
