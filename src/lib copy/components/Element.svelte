@@ -17,12 +17,10 @@
 	} from '../housekeeping/events.js';
 	import type { ElementType, Element, FragmentElement } from '../index.js';
 	import Elements from './Elements.svelte';
-	export let okform: any = null;
-	export let element: ElementType<Z>;
-	let _element = <Element<Z>>element;
-	let _fragment = <FragmentElement<Z>>element;
+	export let element: ElementType;
+	let _element = <Element>element;
+	let _fragment = <FragmentElement>element;
 	let DOMelement: any;
-	let nodeName = _element?._nodeName?.toLowerCase?.();
 	let innerText = _fragment.$innerText;
 	let innerHTML = _fragment.$innerHTML;
 	let attributes = _element.$attr;
@@ -32,9 +30,6 @@
 		let hasTimeouts = !!element._timeouts.length;
 		let hasIntervals = !!element._intervals.length;
 		onMount(() => {
-			if (nodeName === 'form') {
-				okform._formEl = DOMelement;
-			}
 			if (hasEvents) {
 				if (element._isFragment) {
 					DOMelement = document.createElement('div');
@@ -89,7 +84,7 @@
 		{@html $innerHTML}
 	{/if}
 {:else}
-	<svelte:element this={nodeName} bind:this={DOMelement} {...$attributes}>
+	<svelte:element this={_element._nodeName.toLowerCase()} bind:this={DOMelement} {...$attributes}>
 		<Elements childElements={_element.$childElements} />
 	</svelte:element>
 {/if}

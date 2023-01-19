@@ -12,3 +12,4 @@ export type { default as Element, ElementOpts } from './element.js';
 export type { default as FragmentElement } from './fragmentelement.js';
 
 //Form Element
+export { default as FormElement } from './formelement.js';

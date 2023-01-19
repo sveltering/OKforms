@@ -5,14 +5,14 @@ import { writableStore } from '@sveltering/custom-store';
 
 type lifeCycleEvents = 'mount' | 'destroy' | 'afterUpdate' | 'beforeUpdate';
 
-type FragmentElementOpts<Z> = {
-	_okform: OKForm<Z>;
-	_parentElement: Element<Z>;
+type FragmentElementOpts = {
+	_okform: OKForm;
+	_parentElement: Element;
 };
-class FragmentElement<Z> extends _Element<Z> {
+class FragmentElement extends _Element {
 	_isFragment: boolean = true;
 
-	constructor({ _okform, _parentElement }: FragmentElementOpts<Z>) {
+	constructor({ _okform, _parentElement }: FragmentElementOpts) {
 		super();
 		this._okform = _okform;
 		this._parentElement = _parentElement;
@@ -21,12 +21,6 @@ class FragmentElement<Z> extends _Element<Z> {
 		return this;
 	}
 
-	empty(): this {
-		this.$innerText.value = false;
-		this.$innerHTML.value = false;
-
-		return this;
-	}
 	html(_innerHTML: string) {
 		this.$innerText.value = false;
 		this.$innerHTML.value = _innerHTML;

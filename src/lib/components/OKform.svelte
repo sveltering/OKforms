@@ -1,7 +1,7 @@
-<script lang="ts">
+<script>
+	// @ts-nocheck
 	import Element from './Element.svelte';
-	import type { OKForm } from '../index.js';
-	export let okform: OKForm;
+	export let okform;
 </script>
 
-<Element element={okform.form()} />
+<Element element={okform.form()} {okform} />

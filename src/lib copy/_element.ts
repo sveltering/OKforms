@@ -1,11 +1,9 @@
 import type { ArrayStore, KeyValueStore, WritableStore } from '@sveltering/custom-store';
 import type { OKForm, ElementType, Element } from './index.js';
-import type { z } from 'zod';
 
-abstract class _Element<Z> {
-	_okform!: OKForm<Z>;
-	_z!: z.ZodType;
-	_parentElement!: Element<Z>;
+abstract class _Element {
+	_okform!: OKForm;
+	_parentElement!: Element;
 	_elementIndex: number = 0;
 	_hasParent: boolean = false;
 	_events: { [eventName: string]: { callback: CallableFunction; options: {} }[] } = {};
@@ -13,9 +11,10 @@ abstract class _Element<Z> {
 	_intervals: { callback: CallableFunction; time: number; intervalId?: number }[] = [];
 
 	//ELEMENT
+	static _form: Element;
 	_nodeName!: string;
 	_isFragment: boolean = false;
-	$childElements!: ArrayStore<ElementType<Z>>;
+	$childElements!: ArrayStore<ElementType>;
 	$attr!: KeyValueStore<string | number | boolean>;
 
 	//FRAGMENT ELEMET
@@ -26,33 +25,33 @@ abstract class _Element<Z> {
 	constructor() {
 		return this;
 	}
-	get $siblings(): ArrayStore<ElementType<Z>> {
+	get $siblings(): ArrayStore<ElementType> {
 		return this._parentElement.$childElements;
 	}
 
-	protected static resetIndexes<Z>($store: ArrayStore<ElementType<Z>>): void {
+	protected static resetIndexes($store: ArrayStore<ElementType>): void {
 		let storeArr = $store.value;
 		for (let i = 0, iLen = storeArr.length; i < iLen; i++) {
 			$store.value[i]._elementIndex = i;
 		}
 	}
 
-	protected pluckElementFromParent(element: ElementType<Z>): ElementType<Z> | void {
+	protected pluckElementFromParent(element: ElementType): ElementType | void {
 		if (!element._hasParent) {
 			return element;
 		}
 		let $siblings = element.$siblings;
 		let plucked = $siblings.pluck(element._elementIndex);
-		_Element.resetIndexes<Z>($siblings);
+		_Element.resetIndexes($siblings);
 		return plucked;
 	}
-	protected _insert(element: ElementType<Z>, after: boolean = true): this {
-		let plucked = <ElementType<Z>>this.pluckElementFromParent(this);
+	protected _insert(element: ElementType, after: boolean = true): this {
+		let plucked = <ElementType>this.pluckElementFromParent(this);
 		plucked._parentElement = element._parentElement;
 		plucked._hasParent = true;
 		let $newSiblings = element.$siblings;
 		$newSiblings[after ? 'addAfter' : 'addBefore'](element._elementIndex, plucked);
-		_Element.resetIndexes<Z>($newSiblings);
+		_Element.resetIndexes($newSiblings);
 		return this;
 	}
 
@@ -71,7 +70,7 @@ abstract class _Element<Z> {
 			}
 		}
 	}
-	empty(): this {
+	remove(): void {
 		if (this?.$childElements) {
 			let _childElements = this.$childElements.value;
 			if (_childElements.length) {
@@ -80,25 +79,21 @@ abstract class _Element<Z> {
 				}
 			}
 		}
-		return this;
-	}
-	remove(): void {
-		this.empty();
 		this.__remove();
 	}
-	appendTo(element: Element<Z>): this {
-		<Element<Z>>element.append(this);
+	appendTo(element: Element): this {
+		<Element>element.append(this);
 		return this;
 	}
-	prependTo(element: Element<Z>): this {
-		<Element<Z>>element.prepend(this);
+	prependTo(element: Element): this {
+		<Element>element.prepend(this);
 		return this;
 	}
 
-	insertAfter(element: ElementType<Z>): this {
+	insertAfter(element: ElementType): this {
 		return this._insert(element, true);
 	}
-	insertBefore(element: ElementType<Z>): this {
+	insertBefore(element: ElementType): this {
 		return this._insert(element, false);
 	}
 	insertStart(): this {
